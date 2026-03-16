@@ -1,0 +1,6 @@
+Source: CSV files (data folder)
+Raw: Landing tables (schema folder)
+Staging: Data cleaning (transformations folder)
+Stream: Change Data Capture (streams folder)
+Task: Automation (tasks folder)
+Mart: Final Star Schema (schema folder)
