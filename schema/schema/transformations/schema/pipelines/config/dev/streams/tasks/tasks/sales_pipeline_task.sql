@@ -1,0 +1,6 @@
+CREATE OR REPLACE TASK sales_pipeline_task
+WAREHOUSE = COMPUTE_WH
+SCHEDULE = '5 MINUTE'
+WHEN SYSTEM$STREAM_HAS_DATA('orders_stream')
+AS
+CALL SP_RUN_SALES_PIPELINE(); -- This calls your ETL logic
