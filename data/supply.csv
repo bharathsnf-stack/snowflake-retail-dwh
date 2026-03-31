@@ -1,0 +1,6 @@
+supply_id,product_id,stock_level,warehouse_location
+501,101,50,Hyderabad
+502,102,100,Bangalore
+503,103,200,Chennai
+504,104,150,Hyderabad
+505,105,30,Pune
