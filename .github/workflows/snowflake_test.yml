@@ -1,13 +1,13 @@
-name: Snowflake Connection Test
+name: dbt_run_snowflake
 
 on:
   push:
     branches:
-      - dev  # మీరు dev బ్రాంచ్‌లో పుష్ చేసినప్పుడు ఇది రన్ అవుతుంది
-  workflow_dispatch: # దీనివల్ల మీరు మాన్యువల్‌గా కూడా రన్ చేయవచ్చు
+      - dev
+  workflow_dispatch:
 
 jobs:
-  test_connection:
+  run_dbt:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -18,32 +18,13 @@ jobs:
         with:
           python-version: '3.9'
 
-      - name: Install Snowflake Connector
-        run: pip install snowflake-connector-python
+      - name: Install dbt
+        run: pip install dbt-snowflake
 
-      - name: Test Connection Script
+      - name: Run dbt
         env:
-          SN_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
-          SN_USER: ${{ secrets.SNOWFLAKE_USER }}
-          SN_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
+          SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+          SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
+          SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
         run: |
-          python -c "
-          import snowflake.connector
-          import os
-          try:
-              # GitHub Secrets నుండి వివరాలు తీసుకుంటుంది
-              conn = snowflake.connector.connect(
-                  account=os.getenv('SN_ACCOUNT'),
-                  user=os.getenv('SN_USER'),
-                  password=os.getenv('SN_PASSWORD')
-              )
-              cursor = conn.cursor()
-              cursor.execute('SELECT CURRENT_VERSION()')
-              version = cursor.fetchone()
-              print(f'Success: Connected to Snowflake! Version: {version[0]}')
-              cursor.close()
-              conn.close()
-          except Exception as e:
-              print(f'Error: {e}')
-              exit(1)
-          "
+          dbt run --profiles-dir .
