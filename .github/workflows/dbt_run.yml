@@ -1,0 +1,16 @@
+name: dbt_run_snowflake
+on: [push]
+
+jobs:
+  run_dbt:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dbt
+        run: pip install dbt-snowflake
+      - name: Run dbt
+        run: dbt run --profiles-dir .
+        env:
+          SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+          SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
+          SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
